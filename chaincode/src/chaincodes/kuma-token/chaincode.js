@@ -8,6 +8,8 @@ const AbstractWallet = require('./models/AbstractWallet');
 const UserWallet = require('./models/UserWallet');
 const ContractWallet = require('./models/ContractWallet');
 
+const PensionFund = require('./models/PensionFund');
+
 const Joi = require('./common/services/joi');
 
 /**
@@ -30,7 +32,7 @@ const KumaTokenChaincode = class extends ChaincodeBase {
      *                 If undefined, will be set to the caller's wallet
      */
     async transfer(stub, txHelper, amount, toAddress, fromAddress = undefined) {
-        // Create a schema to validate the user input
+        // Create a schema to validate the user input 
         const schema = Joi.object().keys({
             amount: Joi.number().required().positive(),
             toAddress: Joi.string().required().walletId(),
@@ -58,7 +60,7 @@ const KumaTokenChaincode = class extends ChaincodeBase {
             if (!fromWallet) {
 
                 throw new ChaincodeError(ERRORS.UNKNWON_WALLET, {
-                    'address': fromAddress
+                    'address': fromAddress  
                 });
             }
         } else {
@@ -200,6 +202,24 @@ const KumaTokenChaincode = class extends ChaincodeBase {
             amount: 0
         }).save(txHelper);
     }
+
+    async createPensionFund(stub, txHelper) {
+
+        return new PensionFund({
+            address: txHelper.uuid(CONSTANTS.PREFIXES.PENSION_FUND),
+            name: 'message',
+            amount: 1000 // add an inital amount of 1000 tokens
+        }).save(txHelper);
+        
+    }
+
+    /**
+     * Returns 'pong'
+    */
+   async ping2() {
+       return 'pong2';
+   }
+
 
 };
 
