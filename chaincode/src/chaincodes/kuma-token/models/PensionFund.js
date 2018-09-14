@@ -7,27 +7,25 @@ const logger = utils.logger.getLogger('models/PensionFund');
 
 class PensionFund {
 
-    constructor({address, name, amount = 0.0}) {
+    constructor({address, name}) {
         this.address = address;
         this.name = name;
-        this.amount = amount;
+        this.participants = [];
     }
 
-    addAmount(amount) {
-        this.amount += amount;
-        return this;
+    addParticipant(participant) {
+        this.participants.push(participant);    
     }
 
     async save(txHelper) {
         await txHelper.putState(this.address, {
             'address': this.address,
             'name': this.name,
-            'amount': this.amount
+            'participants': this.participants
         });
 
         return this;
     }
-
 }
 
 module.exports = PensionFund;
