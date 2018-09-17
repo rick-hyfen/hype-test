@@ -13,8 +13,9 @@ class PensionFund {
         this.participants = [];
     }
 
-    addParticipant(participant) {
+    async addParticipant(txHelper, participant) {
         this.participants.push(participant);
+        await this.save(txHelper);
     }
 
     async save(txHelper) {

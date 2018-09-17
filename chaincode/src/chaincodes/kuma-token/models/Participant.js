@@ -16,17 +16,22 @@ class Participant {
         this.status = 'ACTIVE';
     }
 
-    addEntitlements(entitlements) {
+    async addEntitlements(txHelper, entitlements) {
         this.entitlements += entitlements;
+        await this.save(txHelper);
         return this;
     }
 
-    deactivateParticipant() {
+    async deactivateParticipant(txHelper) {
         this.status = 'INACTIVE';
+        await this.save(txHelper);
+        return this;
     }
 
-    closeParticipant() {
+    async closeParticipant(txHelper) {
         this.status = 'TRANSFERRED';
+        await this.save(txHelper);
+        return this;
     }
 
     async save(txHelper) {

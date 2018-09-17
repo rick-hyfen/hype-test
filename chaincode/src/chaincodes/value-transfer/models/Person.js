@@ -14,9 +14,10 @@ class Person {
         this.participations = []
     }
 
-    addParticipation(participant) {
+    async addParticipation(txHelper, participant) {
         this.participations.push(participant);
-    }  
+        await this.save(txHelper);
+    }
 
     async save(txHelper) {
         await txHelper.putState(this.address, {
