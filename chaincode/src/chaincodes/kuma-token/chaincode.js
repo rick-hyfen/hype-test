@@ -203,12 +203,22 @@ const KumaTokenChaincode = class extends ChaincodeBase {
         }).save(txHelper);
     }
 
-    async createPensionFund(stub, txHelper) {
+    async createPensionFund(stub, txHelper, _name) {
 
         return new PensionFund({
             address: txHelper.uuid(CONSTANTS.PREFIXES.PENSION_FUND),
-            name: 'message',
-            amount: 1000 // add an inital amount of 1000 tokens
+            name: _name,
+            //amount: 1000000 // add an inital amount of 1000000 tokens
+        }).save(txHelper);
+        
+    }
+
+    async createParticipant(stub, txHelper, _UID, _pensionFund) {
+
+        return new PensionFund({
+            address: txHelper.uuid(CONSTANTS.PREFIXES.PENSION_FUND),
+            name: _name,
+            //amount: 1000000 // add an inital amount of 1000000 tokens
         }).save(txHelper);
         
     }

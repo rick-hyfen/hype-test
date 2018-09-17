@@ -7,36 +7,40 @@ const logger = utils.logger.getLogger('models/Participant');
 
 class Participant {
 
-    constructor({address, UID, _entitlements = 0.0, _pensionFund}) {
+    constructor({address, UID, _entitlements = 0.0, _pensionFund, _person}) {
         this.address = address;
         this.UID = UID;
         this.entitlements = _entitlements;
         this.pensionFund = _pensionFund;
+        this.person = _person;
         this.status = 'ACTIVE';
     }
 
-    addAmount(amount) {
+    addEntitlements(amount) {
         this.entitlements += amount;
         return this;
     }
-
-    deactivateParticipant() {
+    
+    setInactive() {
         this.status = 'INACTIVE';
     }
 
-    closeParticipant() {
-        this.status ='DONE';
+    setTransferred() {
+        this.status ='TRANSFERRED';
     }
 
     async save(txHelper) {
         await txHelper.putState(this.address, {
             'address': this.address,
-            'name': this.name,
-            'amount': this.amount
+            'UID': this.UID,
+            'entitlement': this.entitlements,
+            'pensionFund': this.pensionFund,
+            'person': this.person,
+            'status': this.status
         });
 
         return this;
     }
 }
 
-module.exports = PensionFund;
+module.exports = Participant;
