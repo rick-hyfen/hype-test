@@ -228,7 +228,7 @@ const KumaTokenChaincode = class extends ChaincodeBase {
 
         const person = await Person.queryPersonByAddress(txHelper, personAddress);
 
-        const UID = pensionFund.name + person.bsn;
+        const UID = pensionFund.name + String(person.bsn);
 
         const participant = await new Participant({
             address: txHelper.uuid(CONSTANTS.PREFIXES.PARTICIPANT),
@@ -249,9 +249,9 @@ const KumaTokenChaincode = class extends ChaincodeBase {
     /**
      * Returns 'pong'
     */
-   async ping2() {
-       return 'pong2';
-   }
+    async ping2() {
+        return 'pong2';
+    }
 
 
 };
