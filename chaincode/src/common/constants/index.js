@@ -1,6 +1,7 @@
 const CHAINCODES = {
     'KUMA_TOKEN': 'kuma-token',
-    'MULTISIG': 'multisig'
+    'MULTISIG': 'multisig',
+    'VALUE_TRANSFER': 'value-transfer'
 };
 
 const PREFIXES = {

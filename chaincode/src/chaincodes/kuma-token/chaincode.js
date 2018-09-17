@@ -203,24 +203,36 @@ const KumaTokenChaincode = class extends ChaincodeBase {
         }).save(txHelper);
     }
 
-    async createPensionFund(stub, txHelper, _name) {
-
+    async createPensionFund(stub, txHelper, name) {
         return new PensionFund({
             address: txHelper.uuid(CONSTANTS.PREFIXES.PENSION_FUND),
-            name: _name,
-            //amount: 1000000 // add an inital amount of 1000000 tokens
+            name: name
         }).save(txHelper);
-        
+
     }
 
-    async createParticipant(stub, txHelper, _UID, _pensionFund) {
+    async createParticipant(stub, txHelper, entitlements, pensionFundAddress, personAddress) {
 
-        return new PensionFund({
-            address: txHelper.uuid(CONSTANTS.PREFIXES.PENSION_FUND),
-            name: _name,
-            //amount: 1000000 // add an inital amount of 1000000 tokens
+        const pensionFund = await PensionFund.queryPensionFundByAddress(txHelper, pensionFundAddress);
+
+        const person =await Person.queryPersonByAddress(txHelper, personAddress);
+
+        let UID = pensionFund.name + person.bsn;
+
+        const participant = await new Participant({
+            address: txHelper.uuid(CONSTANTS.PREFIXES.PARTICIPANT),
+            UID: UID,
+            entitlements: entitlements,
+            pensionFund: pensionFundAddress,
+            person:personAddress
         }).save(txHelper);
-        
+
+        pensionFund.addParticipant(participant);
+        person.addParticipation(participant);
+
+
+        return participant;
+
     }
 
     /**
