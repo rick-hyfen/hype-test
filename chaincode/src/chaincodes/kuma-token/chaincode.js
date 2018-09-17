@@ -213,8 +213,26 @@ const KumaTokenChaincode = class extends ChaincodeBase {
 
     }
 
+    async getPensionFund(stub, txHelper, pensionFundAddress) {
+        const pensionFund = await PensionFund.queryPensionFundByAddress(txHelper, pensionFundAddress);
+        return pensionFund;
+
+    }
+
+    async getPerson(stub, txHelper, personAddress) {
+        const person = await Person.queryPersonByAddress(txHelper, personAddress);
+        return person;
+
+    }
+
+    async getParticipant(stub, txHelper, participantAddress) {
+        const participant = await Participant.queryPensionFundByAddress(txHelper, participantAddress);
+        return participant;
+
+    }
+
     async createPerson(stub, txHelper, bsn, name) {
-        return new PensionFund({
+        return new Person({
             address: txHelper.uuid(CONSTANTS.PREFIXES.PERSON),
             bsn: bsn,
             name: name
@@ -228,7 +246,7 @@ const KumaTokenChaincode = class extends ChaincodeBase {
 
         const person = await Person.queryPersonByAddress(txHelper, personAddress);
 
-        const UID = pensionFund.name + String(person.bsn);
+        const UID = pensionFund.name.concat(String(person.bsn));
 
         const participant = await new Participant({
             address: txHelper.uuid(CONSTANTS.PREFIXES.PARTICIPANT),

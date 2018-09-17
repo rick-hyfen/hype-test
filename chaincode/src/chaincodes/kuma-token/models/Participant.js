@@ -26,7 +26,7 @@ class Participant {
     }
 
     closeParticipant() {
-        this.status ='TRANSFERRED';
+        this.status = 'TRANSFERRED';
     }
 
     async save(txHelper) {
