@@ -5,6 +5,7 @@ const ERRORS = require('./common/constants/errors');
 const CONSTANTS = require('./common/constants/index');
 
 const PensionFund = require('./models/PensionFund');
+const Person = require('./models/Person');
 const Participant = require('./models/Participant');
 
 const Joi = require('./common/services/joi');
@@ -26,31 +27,55 @@ const ValueTransferChaincode = class extends ChaincodeBase {
 
     }
 
+    async createPerson(stub, txHelper, bsn, name) {
+        return new PensionFund({
+            address: txHelper.uuid(CONSTANTS.PREFIXES.PERSON),
+            bsn: bsn,
+            name: name
+        }).save(txHelper);
+
+    }
+
+    async createPensionFund(stub, txHelper, name) {
+        return new PensionFund({
+            address: txHelper.uuid(CONSTANTS.PREFIXES.PENSION_FUND),
+            name: name
+        }).save(txHelper);
+
+    }
+
+    async createPerson(stub, txHelper, bsn, name) {
+        return new PensionFund({
+            address: txHelper.uuid(CONSTANTS.PREFIXES.PERSON),
+            bsn: bsn,
+            name: name
+        }).save(txHelper);
+
+    }
+
     async createParticipant(stub, txHelper, entitlements, pensionFundAddress, personAddress) {
 
         const pensionFund = await PensionFund.queryPensionFundByAddress(txHelper, pensionFundAddress);
 
-        const person =await Person.queryPersonByAddress(txHelper, personAddress);
+        const person = await Person.queryPersonByAddress(txHelper, personAddress);
 
-        let UID = pensionFund.name + person.bsn;
+        const UID = pensionFund.name.concat(String(person.bsn));
 
         const participant = await new Participant({
             address: txHelper.uuid(CONSTANTS.PREFIXES.PARTICIPANT),
             UID: UID,
             entitlements: entitlements,
             pensionFund: pensionFundAddress,
-            person:personAddress
+            person: personAddress
         }).save(txHelper);
 
-        pensionFund.addParticipant(participant);
-        person.addParticipation(participant);
+        pensionFund.addParticipant(txHelper, participant);
+        person.addParticipation(txHelper, participant);
 
 
         return participant;
 
     }
-
-
 
 };
 
